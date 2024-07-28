@@ -16,6 +16,8 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     
+    @State private var score = 0
+    @State private var scoreTitle = ""
     
     var body: some View {
         NavigationStack{
@@ -41,9 +43,14 @@ struct ContentView: View {
                 Text(errorMessage)
             }
             .toolbar{
-                Button("Start Game") {
-                    startGame()
+                HStack(alignment: .firstTextBaseline, spacing: 50){
+                    Text(scoreTitle)
+
+                    Button("Start Game") {
+                        startGame()
+                    }
                 }
+
             }
         }
     }
@@ -76,6 +83,8 @@ struct ContentView: View {
             return
         }
         
+        score += answer.count
+        scoreTitle = "\(score) Points"
         withAnimation{
             useWords.insert(answer, at: 0)
         }
@@ -83,6 +92,8 @@ struct ContentView: View {
     }
     
     func startGame(){
+        score = 0
+        scoreTitle = ""
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt"){
             if let startWords = try? String(contentsOf: startWordsURL){
                 let allWords = startWords.components(separatedBy: "\n")
